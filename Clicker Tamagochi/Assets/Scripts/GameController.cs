@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GameManager : MonoBehaviour
+public class GameController : MonoBehaviour
 {
     [SerializeField] Button clickButton;
     [SerializeField] Button upgradeButton;
@@ -16,35 +16,30 @@ public class GameManager : MonoBehaviour
     {
         data = FindObjectOfType<DataSaver>().data;
         coinsText.text = "Coins = " + data.Coins;
-        upgradePriceText.text = "Upgrade price = " + data.UpgradePrice;
+        upgradePriceText.text = "Upgrade price = " + data.simpleClickPrice;
+
         clickButton.onClick.AddListener(OnClickButton);
         upgradeButton.onClick.AddListener(OnUpgradeButton);
-       
     }
 
-    public void DisplayTexts()
-    {
-        data = FindObjectOfType<DataSaver>().data;
-        coinsText.text = "Coins = " + data.Coins;
-        upgradePriceText.text = "Upgrade price = " + data.UpgradePrice;
-    }
 
     void OnClickButton()
     {
-        data.Coins += data.CoinsPerClick;
+        data.Coins += 1 + data.simpleClick;
         coinsText.text = "Coins = " + data.Coins;
 
     }
 
     void OnUpgradeButton()
     {
-        if (data.Coins < data.UpgradePrice) return;
+        if (data.Coins < data.simpleClickPrice) return;
 
-        data.Coins -= data.UpgradePrice;
-        data.CoinsPerClick++;
+        data.Coins -= data.simpleClickPrice;
+        data.simpleClick++;
+
         coinsText.text = "Coins = " + data.Coins;
-        data.UpgradePrice = (int)(data.UpgradePrice * 1.5f);
-        upgradePriceText.text = "Upgrade price = " + data.UpgradePrice;
+        data.simpleClickPrice = (int)(data.simpleClickPrice * 1.5f);
+        upgradePriceText.text = "Upgrade price = " + data.simpleClickPrice;
     }
 
 

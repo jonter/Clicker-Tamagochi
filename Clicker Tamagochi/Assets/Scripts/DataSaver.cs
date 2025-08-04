@@ -1,26 +1,28 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class DataSaver : MonoBehaviour
 {
-    [SerializeField] Button saveButton;
-    [SerializeField] Button loadButton;
 
     public Data data;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         data = new Data();
-        saveButton.onClick.AddListener(Save);
-        loadButton.onClick.AddListener(Load);
+        Load();
+        StartCoroutine(AutoSave());
     }
 
-    void Save()
+    IEnumerator AutoSave()
     {
-        string sdata = JsonUtility.ToJson(data);
-        print(sdata);
-        PlayerPrefs.SetString("data", sdata);
-        
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(2);
+            string sdata = JsonUtility.ToJson(data);
+            print(sdata);
+            PlayerPrefs.SetString("data", sdata);
+        }
     }
 
     void Load()
@@ -29,8 +31,6 @@ public class DataSaver : MonoBehaviour
 
         string sdata = PlayerPrefs.GetString("data");
         data = JsonUtility.FromJson<Data>(sdata);
-
-        FindObjectOfType<GameManager>().DisplayTexts();
     }
 
     
